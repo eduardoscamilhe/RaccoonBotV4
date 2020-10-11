@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/RaccoonBot/.vs/RaccoonBot
+/RaccoonBot/RaccoonBot.Console/bin
+/RaccoonBot/RaccoonBot.Console/obj
+/RaccoonBot/RaccoonBot.Console/Properties/PublishProfiles
+/RaccoonBot/RaccoonBot.CrossCutting/bin/Debug/netcoreapp3.1
+/RaccoonBot/RaccoonBot.CrossCutting/bin/Release/netcoreapp3.1
+/RaccoonBot/RaccoonBot.CrossCutting/obj
