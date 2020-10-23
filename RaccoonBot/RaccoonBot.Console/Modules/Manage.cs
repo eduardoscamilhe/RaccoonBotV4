@@ -3,7 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using RaccoonBot.Domain.Command;
 using RaccoonBot.Domain.Constants;
-using RaccoonBot.Domain.Settings;
 using RaccoonBot.Domain.Utils;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace RaccoonBot.Console.Modules
+namespace RaccoonBot.Modules
 {
     public class Manage : ModuleBase<SocketCommandContext>
     {
@@ -215,69 +214,6 @@ namespace RaccoonBot.Console.Modules
                     sendMessages: PermValue.Allow));
                 }
 
-            }
-            catch
-            {
-
-            }
-        }
-
-        [Command(Commands.Copy), RequireUserPermission(GuildPermission.Administrator)]
-        [Summary(Summary.Copy)]
-        public async Task CopyMesssageChat(SocketGuildChannel copyChannel, SocketGuildChannel pasteChannel, string quantityMsg, string mentionUsers = "false")
-        {
-            try
-            {
-
-                var msgs = await (copyChannel as ISocketMessageChannel).GetMessagesAsync(Int32.Parse(quantityMsg) + 1).FlattenAsync();
-                var mentionUser = bool.Parse(mentionUsers);
-                foreach (var msg in msgs.OrderBy(x => x.CreatedAt.DateTime))
-                {
-                    try
-                    {
-                        var paste = (pasteChannel as ISocketMessageChannel);
-                        var mention = mentionUser ? $"{msg.Author.Mention} disse :  \n" : string.Empty;
-                        await paste.SendMessageAsync(mention + msg.Content);
-
-                        foreach (var att in msg.Attachments)
-                        {
-                            var webClient = new WebClient();
-                            byte[] imageBytes = webClient.DownloadData(att.Url);
-                            Stream stream = new MemoryStream(imageBytes);
-                            await paste.SendFileAsync(stream, att.Filename);
-                        }
-
-
-
-                    }
-                    catch { }
-
-                }
-            }
-            catch
-            {
-
-            }
-        }
-
-        [Command(Commands.RemoveCategory), RequireUserPermission(GuildPermission.Administrator)]
-        [Summary(Summary.RemoveCategory)]
-        public async Task RemoveCategory([Remainder] string categories)
-        {
-            try
-            {
-                var guild = Context.Guild;
-                var listCategories = categories.Split(',');
-
-                foreach (var category in listCategories)
-                {
-                    var cat = guild.CategoryChannels.FirstOrDefault(x => x.Name.ToUpper() == category.ToUpper());
-
-                    foreach (var room in cat.Channels)
-                        await room.DeleteAsync();
-
-                    await cat.DeleteAsync();
-                }
             }
             catch
             {

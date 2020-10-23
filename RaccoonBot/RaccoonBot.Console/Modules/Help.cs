@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RaccoonBot.Console.Modules
+namespace RaccoonBot.Modules
 {
     public class Help : ModuleBase<SocketCommandContext>
     {
@@ -37,17 +37,7 @@ namespace RaccoonBot.Console.Modules
             List<CommandInfo> commands = Service.Commands.Where(x => CriticalHelp.CommandsSummaryUserChannel.Any(cs => cs.ToLower() == x.Name.ToLower())).ToList();
             await CreateEmbedTextHelpModulesCommands(commands);
         }
-
-
-
-        [Command(Commands.HelpMhw)]
-        [Summary(Summary.HelpMhw)]
-        public async Task HelpMhw()
-        {
-            List<CommandInfo> commands = Service.Commands.Where(x => CriticalHelp.CommandsSummaryMhw.Any(cs => cs.ToLower() == x.Name.ToLower())).ToList();
-            await CreateEmbedTextHelpModulesCommands(commands);
-        }
-
+      
         private async Task CreateEmbedTextHelpModulesCommands(List<CommandInfo> commands)
         {
             try

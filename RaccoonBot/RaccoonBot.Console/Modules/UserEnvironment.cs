@@ -9,7 +9,7 @@ using RaccoonBot.Domain.Utils;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RaccoonBot.Console.Modules
+namespace RaccoonBot.Modules
 {
     public class UserEnvironment : ModuleBase<SocketCommandContext>
     {
