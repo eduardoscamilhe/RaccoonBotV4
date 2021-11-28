@@ -2,6 +2,7 @@
 using Discord.Commands;
 using RaccoonBot.Domain.Command;
 using RaccoonBot.Domain.Constants;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,15 +30,6 @@ namespace RaccoonBot.Modules
             await CreateEmbedTextHelpModulesCommands(commands);
         }
 
-        [Command(Commands.HelpUserChannel)]
-        [Summary(Summary.HelpUserChannel)]
-        public async Task HelpUserChange()
-        {
-
-            List<CommandInfo> commands = Service.Commands.Where(x => CriticalHelp.CommandsSummaryUserChannel.Any(cs => cs.ToLower() == x.Name.ToLower())).ToList();
-            await CreateEmbedTextHelpModulesCommands(commands);
-        }
-      
         private async Task CreateEmbedTextHelpModulesCommands(List<CommandInfo> commands)
         {
             try
@@ -51,7 +43,10 @@ namespace RaccoonBot.Modules
                 await Context.User.SendMessageAsync(string.Empty, false, embedBuilder.Build());
 
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

@@ -48,6 +48,7 @@ namespace RaccoonBot.Domain.Constants
         public const string IPlaySuccess = "A role {0} foi adicionado em {1}";
         public const string IPlayFail = "Não foi encontrado a role";
 
+        public const string Welcome = "Bem vindo ao {0} {1}, para saber os comandos do discord digitar comando r.help";
 
     }
 }

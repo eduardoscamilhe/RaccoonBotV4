@@ -249,6 +249,51 @@ namespace RaccoonBot.Modules
                 await c.AddPermissionOverwriteAsync(r, new OverwritePermissions(viewChannel: PermValue.Allow));
         }
 
+        public async Task MostPlaybleGame(SocketUser socketUser, SocketVoiceState before, SocketVoiceState after)
+        {
 
+            try
+            {
+
+                var raccoonGuild = _client.GetGuild(_settings.RaccoonlandId);
+                var role = raccoonGuild.Roles.FirstOrDefault(x => x.Name == CustomRoles.MostPlaybleGame);
+                if (after.VoiceChannel != null)
+                {
+
+                    var usersVoice = raccoonGuild.VoiceChannels.Select(x => x.Users).Where(x => x.Count > 0).ToList();
+                    List<SocketGuildUser> users = new List<SocketGuildUser>();
+
+                    Dictionary<string, int> gamesMostWanted = new Dictionary<string, int>();
+
+                    usersVoice.ForEach(x => { x.ToList().ForEach(y => { users.Add(y); }); });
+
+                    var gameMost = users.Where(x => x.Activity != null).GroupBy(k => k.Activity.Name).ToDictionary(g => g.Key, g => g.Count())
+                        .Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+                    var usersHighLight = users.Where(x => x.Activity != null && x.Activity.Name == gameMost).ToList();
+                    var removeRole = users.Except(usersHighLight);
+
+                    foreach (var user in usersHighLight)
+                        if (!user.Roles.Any(x => x.Name == role.Name))
+                            await user.AddRoleAsync(role);
+
+                    foreach (var user in removeRole)
+                        if (user.Roles.Any(x => x.Name == role.Name))
+                            await user.RemoveRoleAsync(role);
+
+                }
+                else
+                {
+                    if (role != null) await (socketUser as SocketGuildUser).RemoveRoleAsync(role);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ocorreu erro no UserVoiceStateUpdated.MostPlaybleGame : Message:{ex.Message} ----- StackTrace: {ex.StackTrace}");
+
+            }
+
+
+        }
     }
 }

@@ -43,13 +43,16 @@ namespace RaccoonBot.Modules
 
 
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
 
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
         }
         [Command(Commands.RemoveRolePermissionToCategory), RequireUserPermission(GuildPermission.Administrator)]
@@ -99,7 +102,10 @@ namespace RaccoonBot.Modules
                         {
                             (user as IGuildUser).AddRoleAsync(role);
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
                     Context.Channel.SendMessageAsync(string.Format(Messages.AddRoleMessage, role.Name));
                 }
@@ -124,7 +130,10 @@ namespace RaccoonBot.Modules
                         {
                             (user as IGuildUser).RemoveRoleAsync(role);
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
 
                     }
                     Context.Channel.SendMessageAsync(string.Format(Messages.RemoveRoleMessage, role.Name));
@@ -197,7 +206,7 @@ namespace RaccoonBot.Modules
         }
 
         [Command(Commands.RemoveRolePermissionAllChats), RequireUserPermission(GuildPermission.Administrator)]
-        [Summary("")]
+        [Summary("Remove todas as permissões de uma role de todos os canais")]
         public async Task RemoveRolePermissionAllChats([Remainder] string roles)
         {
 
@@ -211,8 +220,8 @@ namespace RaccoonBot.Modules
                     foreach (var channel in allChannels)
                     {
                         channel.AddPermissionOverwriteAsync(role, new OverwritePermissions(
-                               connect: PermValue.Deny,
-                               viewChannel: PermValue.Deny,
+                               viewChannel: PermValue.Inherit,
+                               connect: PermValue.Inherit,
                                manageChannel: PermValue.Deny,
                                manageMessages: PermValue.Deny,
                                muteMembers: PermValue.Deny,
@@ -221,7 +230,6 @@ namespace RaccoonBot.Modules
                                deafenMembers: PermValue.Deny
                             ));
                     }
-
                 }
                 Context.Channel.SendMessageAsync("Feito");
             });
@@ -246,9 +254,9 @@ namespace RaccoonBot.Modules
                     await cat.DeleteAsync();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -274,8 +282,9 @@ namespace RaccoonBot.Modules
                     {
                         role.DeleteAsync();
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Console.WriteLine(ex.Message);
                         catchMinus++;
                     }
                 }
@@ -362,7 +371,11 @@ namespace RaccoonBot.Modules
                             {
                                 subRoles[i].DeleteAsync();
                             }
-                            catch { }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+
+                            }
                         }
 
                     }
@@ -374,7 +387,7 @@ namespace RaccoonBot.Modules
 
         [Command(Commands.SetHoistable), RequireOwner]
         [Summary(Summary.SetHoistable)]
-        public async Task SetAllHoistable(string hoist)
+        public async Task SetAllHoistable(string hoist, [Remainder] string role)
         {
             await Task.Run(() =>
             {
@@ -383,7 +396,7 @@ namespace RaccoonBot.Modules
                 x.IsHoisted != bool.Parse(hoist) &&
                 !x.IsEveryone &&
                 x.Name != Context.Client.CurrentUser.Username &&
-                x.Name.ToLower() != CustomRoles.BotRole.ToLower()).ToList();
+                x.Name.ToLower() != CustomRoles.BotRole.ToLower() && (string.IsNullOrWhiteSpace(role) || x.Name.Contains(role))).ToList();
 
                 foreach (var role in roles)
                     role.ModifyAsync(x => { x.Hoist = bool.Parse(hoist); });

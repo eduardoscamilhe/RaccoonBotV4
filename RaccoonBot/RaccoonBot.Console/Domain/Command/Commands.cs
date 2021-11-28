@@ -9,6 +9,7 @@
 
         #region Manage
         public const string prefix = "r.";
+        public const string optPrefix = "/";
         public const string Clean = "clean";
         public const string InviteBot = "join";
         public const string InviteDiscord = "invite";
@@ -19,10 +20,12 @@
         public const string HelpAdmin = "admin";
         public const string HelpMhw = "mhw";
         public const string HelpUserChannel = "userChannel";
+        public const string Info = "info";
 
         public const string LuckyNumbers = "lucky";
         public const string LinkRoleRoom = "linkRoom";
         public const string Copy = "copy";
+        public const string Play = "play";
         public const string Ping = "ping";
         public const string PlayingCount = "playing";
         public const string MuteChannel = "muteall";
@@ -31,7 +34,7 @@
         public const string RemoveCategory = "removeCategory";
 
         #endregion
-
+        public const string Say = "say";
         #region Roles
 
         public const string SetRoleAll = "setroles";
@@ -69,6 +72,7 @@
         #endregion
         #region Autorole
         public const string IPlay = "iplay";
+        public const string GameRoles = "gamelist";
         public const string RemoveRolePermissionAllChats = "roleChatDenyAll";
         public const string AddRolePermissionToCategory = "roleChatApply";
         public const string AddRolePermissionModeratorToCategory = "roleChatModApply";

@@ -86,7 +86,7 @@
         #endregion
 
         #region Autorole
-        public const string IPlay = "Você pode pegar qualquer role de games desde que voce escreva o nome mais completo possivel. Exemplo: "+Commands.prefix + Commands.IPlay+" league of legends";
+        public const string IPlay = "Você pode pegar qualquer role de games desde que voce escreva o nome mais completo possivel. Exemplo: " + Commands.prefix + Commands.IPlay + " league of legends";
         #endregion 
     }
 }

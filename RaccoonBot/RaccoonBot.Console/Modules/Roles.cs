@@ -3,8 +3,8 @@ using Discord.Commands;
 using Discord.WebSocket;
 using RaccoonBot.Domain.Command;
 using RaccoonBot.Domain.Constants;
-using RaccoonBot.Domain.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +14,7 @@ namespace RaccoonBot.Modules
     {
         private Settings _settings = Settings.Instance;
 
-       
+
         [Command(Commands.NSFW)]
         [Summary(Summary.NSFW)]
         public async Task GetNSFW()
@@ -67,7 +67,7 @@ namespace RaccoonBot.Modules
         {
             await Task.Run(() =>
             {
-                var roleGame = Context.Guild.Roles.FirstOrDefault(x => 
+                var roleGame = Context.Guild.Roles.FirstOrDefault(x =>
                     !x.Permissions.Administrator &&
                     !x.Permissions.BanMembers &&
                     !x.Permissions.KickMembers &&
@@ -77,6 +77,7 @@ namespace RaccoonBot.Modules
                     !x.Permissions.ManageRoles &&
                     !x.Permissions.MoveMembers &&
                     !x.Permissions.MuteMembers &&
+                    !x.Permissions.ManageGuild &&
                 x.Name.ToLower().Contains(nameOfGame.ToLower()));
                 if (roleGame != null)
                 {
@@ -87,7 +88,41 @@ namespace RaccoonBot.Modules
             });
         }
 
+        [Command(Commands.GameRoles)]
+        public async Task GameRoles()
+        {
+            var guild = Context.Guild;
+            var rolesGame = guild.Roles.Where(x =>
+                !x.Permissions.Administrator &&
+                !x.Permissions.BanMembers &&
+                !x.Permissions.KickMembers &&
+                !x.Permissions.DeafenMembers &&
+                !x.Permissions.ManageMessages &&
+                !x.Permissions.ManageChannels &&
+                !x.Permissions.ManageRoles &&
+                !x.Permissions.MoveMembers &&
+                !x.Permissions.MuteMembers &&
+                !x.Permissions.ManageGuild &&
+                !x.IsEveryone &&
+                x.IsHoisted && x.Name != "Raccoons"
+                );
+            EmbedBuilder embedBuilder = new EmbedBuilder();
 
-      
+            embedBuilder.WithTitle("Quantidade de pessoas por roles:");
+            var textEmbedArray = new List<string>();
+
+            foreach (var roleGame in rolesGame)
+            {
+                var countPerson = guild.Users.Count(x => x.Roles.Any(i => i.Name.Contains(roleGame.Name)));
+                textEmbedArray.Add($@"{ roleGame.Name} : {countPerson}");
+            }
+
+            embedBuilder.WithDescription(string.Join(Environment.NewLine, textEmbedArray));
+            await ReplyAsync("", false, embedBuilder.Build());
+
+        }
+
+
+
     }
 }

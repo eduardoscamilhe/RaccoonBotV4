@@ -3,12 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using RaccoonBot.Domain.Command;
 using RaccoonBot.Domain.Constants;
-using RaccoonBot.Domain.Utils;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace RaccoonBot.Modules
@@ -32,71 +27,7 @@ namespace RaccoonBot.Modules
         }
 
 
-        [Command(Commands.MuteChannel)]
-        [Summary(Summary.MuteChannel)]
-        public async Task MuteUnmuteEveryoneInChat()
-        {
-            await Task.Run(() =>
-            {
-                var author = (SocketGuildUser)Context.Message.Author;
 
-                if (author.Roles.Any(x => x.Name == CustomRoles.MuteMaster))
-                {
-                    var channelAuthor = Context.Guild.VoiceChannels.FirstOrDefault(x => x.Users.Any(u => u.Id == author.Id));
-                    foreach (var member in channelAuthor.Users)
-                        member.ModifyAsync(x => { x.Mute = !member.IsMuted; });
-                }
-            });
-        }
-
-        [Command(Commands.MuteMaster)]
-        [Summary(Summary.MuteMaster)]
-        public async Task MuteMaster(string user)
-        {
-            await Task.Run(() =>
-            {
-
-                var author = (SocketGuildUser)Context.Message.Author;
-                var channelAuthor = Context.Guild.VoiceChannels.FirstOrDefault(x => x.Users.Any(u => u.Id == author.Id));
-                var role = Context.Guild.Roles.FirstOrDefault(x => x.Name == CustomRoles.MuteMaster);
-                if (string.IsNullOrEmpty(user))
-                {
-                    if (channelAuthor.Users.All(x => !x.Roles.Any(r => r.Name == CustomRoles.MuteMaster)))
-                        AddMuteMaster(author, channelAuthor, role);
-                }
-                else
-                {
-                    if (author.Roles.Any(x => x.Name == CustomRoles.MuteMaster))
-                    {
-                        var muteMasterDesignated = channelAuthor.Users.FirstOrDefault(u => u.Id == DiscordHelper.UnMention(user));
-                        author.RemoveRoleAsync(role);
-                        AddMuteMaster(muteMasterDesignated, channelAuthor, role);
-                    }
-                }
-            });
-        }
-        [Command(Commands.MuteMaster)]
-        [Summary(Summary.MuteMaster)]
-        public async Task MuteMaster()
-        {
-            await Task.Run(() =>
-            {
-
-                var author = (SocketGuildUser)Context.Message.Author;
-                var channelAuthor = Context.Guild.VoiceChannels.FirstOrDefault(x => x.Users.Any(u => u.Id == author.Id));
-                var role = Context.Guild.Roles.FirstOrDefault(x => x.Name == CustomRoles.MuteMaster);
-
-                if (channelAuthor.Users.All(x => !x.Roles.Any(r => r.Name == CustomRoles.MuteMaster)))
-                    AddMuteMaster(author, channelAuthor, role);
-
-            });
-        }
-
-        private void AddMuteMaster(SocketGuildUser author, SocketVoiceChannel channelAuthor, SocketRole role)
-        {
-            author.AddRoleAsync(role);
-            Context.Channel.SendMessageAsync($"{author.Mention} é o Mute Master da sala {channelAuthor.Name}");
-        }
 
         [Command(Commands.Clean), RequireUserPermission(ChannelPermission.ManageMessages)]
         [Summary(Summary.Clean)]
@@ -163,69 +94,10 @@ namespace RaccoonBot.Modules
 
         #endregion
 
-        [Command(Commands.LuckyNumbers)]
-        [Summary(Summary.LuckyNumbers)]
-        public async Task LuckyNumbers(string maxNumbers = "6", string numbersLimit = "60")
-        {
-            try
-            {
-                var i = 0;
-                var rnd = new Random();
-                var arrNumbers = new List<int>();
-                while (i < int.Parse(maxNumbers))
-                {
-                    var newNumber = rnd.Next(int.Parse(numbersLimit));
-                    if (!arrNumbers.Any(x => x == newNumber) && newNumber > 0)
-                    {
-                        arrNumbers.Add(newNumber);
-                        i++;
-                    }
-                }
-                await Context.Channel.SendMessageAsync(string.Format(Messages.LuckyNumbers, string.Join(' ', arrNumbers.OrderBy(x => x))));
-            }
-            catch
-            {
-                await Context.Channel.SendMessageAsync(Messages.ErrorLuckyNumber);
-            }
-        }
-
-        [Command(Commands.LinkRoleRoom)]
-        [Summary(Summary.LinkRoleRoom)]
-        public async Task LinkRoleRoom(SocketGuildChannel channelMention, [Remainder] string rolesMention)
-        {
-            try
-            {
-                var everyone = Context.Guild.Roles.FirstOrDefault(x => x.IsEveryone);
-                await channelMention.AddPermissionOverwriteAsync(everyone, new OverwritePermissions
-                (connect: PermValue.Deny,
-                 viewChannel: PermValue.Deny,
-                 readMessageHistory: PermValue.Deny,
-                 sendMessages: PermValue.Deny
-                 ));
-
-                var rolesIds = rolesMention.Replace("<@&", string.Empty).Replace(">", string.Empty).Split(" ").ToList();
-                foreach (var id in rolesIds)
-                {
-                    var role = Context.Guild.GetRole(ulong.Parse(id));
-                    await channelMention.AddPermissionOverwriteAsync(role, new OverwritePermissions
-                    (connect: PermValue.Allow,
-                    viewChannel: PermValue.Allow,
-                    readMessageHistory: PermValue.Allow,
-                    sendMessages: PermValue.Allow));
-                }
-
-            }
-            catch
-            {
-
-            }
-        }
-
         [Command(Commands.Suggest)]
         [Summary(Summary.Suggest)]
         public async Task Suggest([Remainder] string suggest)
         {
-            var guild = Context.Guild;
             var DiscordUser = Context.Client.GetApplicationInfoAsync().Result.Owner;
             await DiscordUser.SendMessageAsync(string.Format(Messages.SuggestMention, Context.User.Mention, suggest));
         }
