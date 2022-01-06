@@ -4,7 +4,7 @@
     {
         public static readonly Settings Instance = new Settings();
 
-        public string BotToken = "MjY4ODE5MTgwODEwMjcyNzcw.WHaDXw.fqI81zZdM0uio1mj_uaVThnJ188";
+        public string BotToken = "";
         public bool RoleGame = false;
         public ulong RaccoonlandId = 220277571798040576;
         public string OriginDiscord = "https://discord.gg/FKdqcPX";
