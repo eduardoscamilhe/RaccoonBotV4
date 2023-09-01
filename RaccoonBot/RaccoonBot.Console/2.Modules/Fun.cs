@@ -25,32 +25,27 @@ namespace RaccoonBot.Modules
         [Summary(Summary.LuckyNumbers)]
         public async Task LuckyNumbers(string maxNumbers = "6", string numbersLimit = "60")
         {
-            await Task.Run(() =>
+            try
             {
-                try
+                var i = 0;
+                var rnd = new Random();
+                var arrNumbers = new List<int>();
+                while (i < int.Parse(maxNumbers))
                 {
-                    var i = 0;
-                    var rnd = new Random();
-                    var arrNumbers = new List<int>();
-                    while (i < int.Parse(maxNumbers))
+                    var newNumber = rnd.Next(int.Parse(numbersLimit));
+                    if (!arrNumbers.Any(x => x == newNumber) && newNumber > 0)
                     {
-                        var newNumber = rnd.Next(int.Parse(numbersLimit));
-                        if (!arrNumbers.Any(x => x == newNumber) && newNumber > 0)
-                        {
-                            arrNumbers.Add(newNumber);
-                            i++;
-                        }
+                        arrNumbers.Add(newNumber);
+                        i++;
                     }
-                    Context.Channel.SendMessageAsync(string.Format(Messages.LuckyNumbers, string.Join(' ', arrNumbers.OrderBy(x => x))));
                 }
-                catch (Exception ex)
-                {
-                    Context.Channel.SendMessageAsync(Messages.ErrorLuckyNumber);
-                    Console.WriteLine(ex.Message);
-                }
-
-            });
-
+                await Context.Channel.SendMessageAsync(string.Format(Messages.LuckyNumbers, string.Join(' ', arrNumbers.OrderBy(x => x))));
+            }
+            catch (Exception ex)
+            {
+                await Context.Channel.SendMessageAsync(Messages.ErrorLuckyNumber);
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

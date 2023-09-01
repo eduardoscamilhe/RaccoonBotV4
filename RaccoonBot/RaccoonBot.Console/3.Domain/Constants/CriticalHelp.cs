@@ -4,7 +4,6 @@ namespace RaccoonBot.Domain.Constants
 {
     public static class CriticalHelp
     {
-
         public static readonly string[] CommandsSummary = {
             Commands.Ping,
             Commands.InviteBot,
@@ -12,12 +11,13 @@ namespace RaccoonBot.Domain.Constants
             Commands.InviteOriginDiscord,
             Commands.LuckyNumbers,
             Commands.Suggest,
-            Commands.BlackHumor,
+            Commands.DarkHumor,
             Commands.NSFW,
             Commands.IPlay,
             Commands.Help,
             Commands.HelpAdmin
          };
+
         public static readonly string[] CommandsSummaryAdmin = {
              Commands.Clean,
              Commands.SetRoleAll,
