@@ -14,7 +14,7 @@ namespace RaccoonBot.Modules
 {
     public class Admin : ModuleBase<SocketCommandContext>
     {
-        private Settings _settings = Settings.Instance;
+        private Settings _settings;
 
         [Command(Commands.Copy), RequireUserPermission(GuildPermission.Administrator)]
         [Summary(Summary.Copy)]

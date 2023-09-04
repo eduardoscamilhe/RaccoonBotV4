@@ -19,7 +19,6 @@ namespace RaccoonBot.Modules
         {
             List<CommandInfo> commands = Service.Commands.Where(x => CriticalHelp.CommandsSummary.Any(cs => cs == x.Name)).ToList();
             await CreateEmbedTextHelpModulesCommands(commands);
-
         }
 
         [Command(Commands.HelpAdmin)]
@@ -40,8 +39,7 @@ namespace RaccoonBot.Modules
                     string embedFieldText = !string.IsNullOrEmpty(c.Summary) ? c.Summary : "No description available\n";
                     embedBuilder.AddField(Commands.prefix + c.Name, embedFieldText);
                 }
-                await Context.User.SendMessageAsync(string.Empty, false, embedBuilder.Build());
-
+                await Context.Channel.SendMessageAsync(string.Empty, false, embedBuilder.Build());
             }
             catch (Exception ex)
             {

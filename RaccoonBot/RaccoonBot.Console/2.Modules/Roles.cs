@@ -12,8 +12,6 @@ namespace RaccoonBot.Modules
 {
     public class Role : ModuleBase<SocketCommandContext>
     {
-        private Settings _settings = Settings.Instance;
-
         [Command(Commands.NSFW)]
         [Summary(Summary.NSFW)]
         public async Task GetNSFW()

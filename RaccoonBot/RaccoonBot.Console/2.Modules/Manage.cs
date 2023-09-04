@@ -12,7 +12,6 @@ namespace RaccoonBot.Modules
     {
         private string _inviteLink = "https://discordapp.com/api/oauth2/authorize?client_id={0}&permissions=8&scope=bot";
         public CommandService Service { get; set; }
-        private Settings _settings = Settings.Instance;
 
         [Command(Commands.Ping)]
         [Summary(Summary.Ping)]

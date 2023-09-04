@@ -5,9 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using RaccoonBot.Domain.Command;
 using RaccoonBot.Domain.Constants;
 using System;
-using System.Diagnostics.Metrics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RaccoonBot
@@ -24,9 +25,10 @@ namespace RaccoonBot
 
         public async Task RunBotAsync()
         {
-            _client = new DiscordSocketClient();
+            var config = new DiscordSocketConfig { GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent };
+            _client = new DiscordSocketClient(config);
             _commands = new CommandService();
-            _settings = Settings.Instance;
+            _settings = JsonSerializer.Deserialize<Settings>(File.ReadAllText("./settings.json"));
 
             _services = new ServiceCollection()
             .AddSingleton(_client)

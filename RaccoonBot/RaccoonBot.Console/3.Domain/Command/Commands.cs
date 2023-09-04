@@ -20,8 +20,6 @@
 
         public const string Help = "help";
         public const string HelpAdmin = "admin";
-        public const string HelpMhw = "mhw";
-        public const string HelpUserChannel = "userChannel";
         public const string Info = "info";
 
         public const string LuckyNumbers = "lucky";
